@@ -24,6 +24,16 @@ class FR(object):
     CASCADE_PATH_FACE = 'haarcascade_frontalface_default.xml'
     FACE_DETECTOR = cv2.CascadeClassifier(CASCADE_PATH_FACE)
     DATA = pickle.loads(open('c:/Face_recognition/face_enc', "rb").read())
+    file = "c:/Face_recognition/IP_WEBCAM.txt"
+    open(file, "a").close()
+    with open("c:/Face_recognition/IP_WEBCAM.txt") as f:
+        IP_WEBCAM = f.readline()
+        if not IP_WEBCAM:
+            ip_webcam = input('Введите  IP_WEBCAM: ')
+            with open(file, 'w') as file:
+                file.write(ip_webcam)
+                file.close()
+                IP_WEBCAM = f.readline()
 
 
 async def output(sleep, text):  # Создаём отдельный поток для цикла while
@@ -34,11 +44,12 @@ async def output(sleep, text):  # Создаём отдельный поток �
 async def face_rec():
     count_for_foto = 0
     await output(00000.1, "Пауза")  # Притормаживаем наш шустрый цикл. (:
-    for i in range(10):
-        cam = cv2.VideoCapture(i)
-        if cam:
-            break
+    # TODO for i in range(10):
+    #     cam = cv2.VideoCapture(i)
+    #     if cam:
+    #         break
     while True:
+        cam = cv2.VideoCapture(f'http://{FR.IP_WEBCAM}:8080/video')
         ret, img = cam.read()
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         faces = FR.FACE_DETECTOR.detectMultiScale(gray

@@ -1,4 +1,4 @@
-from handlers.groups.BOT_Settings import *
+from handlers.BOT_Settings import *
 from TG_BOT import dp
 
 CTS.CUR.execute('CREATE TABLE IF NOT EXISTS USERS(USER_ID INTEGER, USERNAME TEXT)')

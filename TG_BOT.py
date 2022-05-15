@@ -1,4 +1,4 @@
-from handlers.groups.BOT_Settings import *
+from handlers.BOT_Settings import *
 
 from in_app import *
 from out import *
@@ -57,7 +57,7 @@ async def bot_start(message: types.Message):
 
     @dp.callback_query_handler(state=Form.start, text='Выход')
     async def send_bounce_value(call: types.CallbackQuery):
-        await call.answer(text='Выход 🔓')
+        await call.answer(text='Выход 🔒')
         await look_out()
 
 if __name__ == '__main__':
