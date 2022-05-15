@@ -1,11 +1,6 @@
 from main import *
 
 
-async def output(sleep, text):  # Создаём отдельный поток для цикла while
-    await asyncio.sleep(sleep)
-    print(text)
-
-
 async def look_out():
     name = await face_rec()
     if name is None:
@@ -25,7 +20,7 @@ async def look_out():
 
 
 def write_db(name):
-    # Записываем в BD ВХОД СОТРУДНИКА
+    # TODO Записываем в BD ВХОД СОТРУДНИКА
     conn = sqlite3.connect(r'c:/Face_recognition/DB/employee.db')
     cur = conn.cursor()
     cur.execute('''CREATE TABLE IF NOT EXISTS MARK ( id INTEGER PRIMARY KEY

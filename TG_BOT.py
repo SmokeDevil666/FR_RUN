@@ -19,8 +19,6 @@ class Form(StatesGroup):
 
 @dp.message_handler(CommandStart(), ChatTypeFilter(chat_type=types.ChatType.PRIVATE))
 async def cmd_weather(message: types.Message):
-    global conn
-    global cur
     info = cur.execute(f'SELECT * FROM users WHERE user_id = "{message.from_user.id}"')
     if info.fetchone() is None:
         await message.answer('🔒 Учётная запись отсутствует ')
@@ -35,30 +33,32 @@ async def cmd_weather(message: types.Message):
 @dp.message_handler(state=Form.start)
 async def bot_start(message: types.Message):
     if message.text == 'КПП':
-        try:
-            buttons = [
-                types.InlineKeyboardButton(text='Вход', callback_data='Вход'),
-                types.InlineKeyboardButton(text='Выход', callback_data='Выход'),
-            ]
-            keyboard = types.InlineKeyboardMarkup(row_width=2)
-            keyboard.add(*buttons)
-            await message.answer(f'Приветствую!')
-            await message.answer_sticker(r'CAACAgIAAxkBAAED-pxiE205Ckr9p9iQ_b4wFEBvBfJxlwACQBUAAmWzmEiFTnaIF_RyISME')
-            await message.answer('Главное меню!', reply_markup=keyboard)
-        except Exception as e:
-            print(e)
-    else:
-        await message.answer_sticker('CAACAgUAAxkBAAED-qhiE3TKRyWpcefUOYb7QsRoV-lIowACkwQAAkKZ0FcT8UFipY_njCME')
+        buttons = [
+            types.InlineKeyboardButton(text='Вход', callback_data='Вход'),
+            types.InlineKeyboardButton(text='Выход', callback_data='Выход'),
+        ]
+        keyboard = types.InlineKeyboardMarkup(row_width=2)
+        keyboard.add(*buttons)
+        await message.answer_sticker(r'CAACAgIAAxkBAAED-pxiE205Ckr9p9iQ_b4wFEBvBfJxlwACQBUAAmWzmEiFTnaIF_RyISME')
+        await message.answer('КПП!', reply_markup=keyboard)
 
     @dp.callback_query_handler(state=Form.start, text='Вход')
     async def send_bounce_value(call: types.CallbackQuery):
         await call.answer(text='Вход 🔓')
+        await call.message.edit_reply_markup()
+        text = 'Посмотрите пожалуйста в камеру!!'
+        await get_text(text)
         await look_in()
+        await call.message.edit_text('КПП!', reply_markup=keyboard)
 
     @dp.callback_query_handler(state=Form.start, text='Выход')
     async def send_bounce_value(call: types.CallbackQuery):
         await call.answer(text='Выход 🔒')
+        await call.message.edit_reply_markup()
+        text = 'Посмотрите пожалуйста в камеру!!'
+        await get_text(text)
         await look_out()
+        await call.message.edit_text('КПП!', reply_markup=keyboard)
 
 if __name__ == '__main__':
     from handlers import dp

@@ -1,4 +1,4 @@
-import sqlite3
+from colorama import init, Fore
 import os
 import time
 import pickle
@@ -9,7 +9,13 @@ import asyncio
 import cv2
 
 
+init(autoreset=True)
+
+
 class FR(object):
+    RED = Fore.RED
+    BLUE = Fore.BLUE
+    GREEN = Fore.GREEN
     PATHNAME = time.strftime('%Y-%m-%d')
     NOW = time.strftime('%H:%M')
     FULL_PATHNAME = f'c:/Face_recognition/skrin/{PATHNAME}'
@@ -28,8 +34,14 @@ class FR(object):
     open(file, "a").close()
     with open("c:/Face_recognition/IP_WEBCAM.txt") as f:
         IP_WEBCAM = f.readline()
+        print(f'IP_WEBCAM : {GREEN} *** {IP_WEBCAM} ***')
         if not IP_WEBCAM:
-            ip_webcam = input('Введите  IP_WEBCAM: ')
+            print(f'{RED}***Внимание***\n'
+                  f'{BLUE}Скачайте с Google play приложение {GREEN}=> {RED}ip_webcam\n'
+                  f'{BLUE}Установите и настройте приложение, установите нужную ориентацию устройства\n'
+                  f'Сделать вы это можете так: Введите ip address устройства в браузере, раскройте пункт\n'
+                  f'{RED}Дополнительные настройки {GREEN}=> {RED}Ориентация\n\n')
+            ip_webcam = input(f'{BLUE}Введите  ip address android device{GREEN}: ')
             with open(file, 'w') as file:
                 file.write(ip_webcam)
                 file.close()
@@ -91,7 +103,7 @@ async def face_rec():
                 cv2.imwrite(f'{FR.FULL_PATHNAME}/user.' + str(name) + str(count_for_foto) + '.jpg', gray)
             # TODO: cv2.imshow('image', img)  <<< ################################ Вывод изображения
             k = cv2.waitKey(1) & 0xff  # 'ESC'
-            if k == 27:
+            if k == 2:
                 break
             if count_for_foto >= 1:
                 break
