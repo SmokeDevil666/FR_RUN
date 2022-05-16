@@ -1,3 +1,4 @@
+import sqlite3
 from colorama import init, Fore
 import os
 import time
@@ -30,6 +31,7 @@ class FR(object):
     CASCADE_PATH_FACE = 'haarcascade_frontalface_default.xml'
     FACE_DETECTOR = cv2.CascadeClassifier(CASCADE_PATH_FACE)
     DATA = pickle.loads(open('c:/Face_recognition/face_enc', "rb").read())
+    # Запись в файл ip android device
     file = "c:/Face_recognition/IP_WEBCAM.txt"
     open(file, "a").close()
     with open("c:/Face_recognition/IP_WEBCAM.txt") as f:
