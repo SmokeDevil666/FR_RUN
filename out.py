@@ -9,18 +9,17 @@ async def look_out():
     #   Голосовое приветствие
     if name == 'No name':
         text = "Лицо не распознано, пользователь неизвестен!!!"
-        tts = pytt.init()
-        tts.say(text)
-        tts.runAndWait()
-    else:
-        text = 'Всего хорошего ' + name
         await get_text(text)
+        return
+    else:
+        text_tts = f'Всего хорошего {name}'
+        await get_text_tts(text_tts)
         write_db(name)
         cv2.destroyAllWindows()
 
 
 def write_db(name):
-    # TODO Записываем в BD ВХОД СОТРУДНИКА
+    # Записываем в BD ВХОД СОТРУДНИКА
     conn = sqlite3.connect(r'c:/Face_recognition/DB/employee.db')
     cur = conn.cursor()
     cur.execute('''CREATE TABLE IF NOT EXISTS MARK ( id INTEGER PRIMARY KEY
@@ -42,7 +41,7 @@ def write_db(name):
     cur.execute(sqlite_insert_with_name, name_tuple)
     conn.commit()
     conn.close()
-    print(f"Сотрудник -> {name} успешно добавлен")
+    print(f"{FR.RED}INFO: {FR.GREEN}Сотрудник -> {name} успешно добавлен")
 
 
 def table_db():

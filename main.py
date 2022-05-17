@@ -4,19 +4,24 @@ import os
 import time
 import pickle
 
+from transliterate import translit
+import torch
+import sounddevice as sd
+import time
 import pyttsx3 as pytt
 import face_recognition
 import asyncio
 import cv2
 
-
 init(autoreset=True)
 
 
 class FR(object):
+    # colorama
     RED = Fore.RED
     BLUE = Fore.BLUE
     GREEN = Fore.GREEN
+    ##################
     PATHNAME = time.strftime('%Y-%m-%d')
     NOW = time.strftime('%H:%M')
     FULL_PATHNAME = f'c:/Face_recognition/skrin/{PATHNAME}'
@@ -57,12 +62,12 @@ async def output(sleep, text):  # Создаём отдельный поток �
 
 async def face_rec():
     count_for_foto = 0
-    await output(00000.1, "Пауза")  # Притормаживаем наш шустрый цикл. (:
     # TODO for i in range(10):
     #     cam = cv2.VideoCapture(i)
     #     if cam:
     #         break
     while True:
+        await output(00000.1, f"{FR.RED}INFO: Поиск Лица")  # Притормаживаем наш шустрый цикл. (:
         cam = cv2.VideoCapture(f'http://{FR.IP_WEBCAM}:8080/video')
         ret, img = cam.read()
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -105,7 +110,7 @@ async def face_rec():
                 cv2.imwrite(f'{FR.FULL_PATHNAME}/user.' + str(name) + str(count_for_foto) + '.jpg', gray)
             # TODO: cv2.imshow('image', img)  <<< ################################ Вывод изображения
             k = cv2.waitKey(1) & 0xff  # 'ESC'
-            if k == 2:
+            if k == 1:
                 break
             if count_for_foto >= 1:
                 break
@@ -116,12 +121,40 @@ async def face_rec():
 
 
 async def get_text(text):
+    language = 'ru'
+    model_id = 'ru_v3'
+    sample_rate = 48000
+    speaker = 'baya'
+    put_accent = True
+    put_yo = True
+    device = torch.device('cpu')
+    model, _ = torch.hub.load(repo_or_dir='snakers4/silero-models',
+                              model='silero_tts',
+                              language=language,
+                              speaker=model_id)
+    model.to(device)
+
+    audio = model.apply_tts(text=text,
+                            speaker=speaker,
+                            sample_rate=sample_rate,
+                            put_accent=put_accent,
+                            put_yo=put_yo)
+    sd.play(audio, sample_rate)
+    time.sleep(len(audio) / 24000)
+    sd.stop()
+    return text
+
+
+async def get_text_tts(text_tts):
     tts = pytt.init()
     rate = tts.getProperty('rate')
-    tts.setProperty('rate', rate+30)
-    tts.say(text)
+    volume = tts.getProperty('volume')
+    tts.setProperty('volume', volume + 10.9)
+    tts.setProperty('rate', rate + 30)
+    tts.say(text_tts)
     tts.runAndWait()
-    return text
+    return text_tts
+
 
 if __name__ == '__main__':
     asyncio.run(face_rec())

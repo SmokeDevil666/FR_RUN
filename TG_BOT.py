@@ -46,8 +46,8 @@ async def bot_start(message: types.Message):
     async def send_bounce_value(call: types.CallbackQuery):
         await call.answer(text='Вход 🔓')
         await call.message.edit_reply_markup()
-        text = 'Посмотрите пожалуйста в камеру!!'
-        await get_text(text)
+        # text = 'Внимание!!'
+        # await get_text(text)
         await look_in()
         await call.message.edit_text('КПП!', reply_markup=keyboard)
 
@@ -55,8 +55,8 @@ async def bot_start(message: types.Message):
     async def send_bounce_value(call: types.CallbackQuery):
         await call.answer(text='Выход 🔒')
         await call.message.edit_reply_markup()
-        text = 'Посмотрите пожалуйста в камеру!!'
-        await get_text(text)
+        # text = 'Внимание!!'
+        # await get_text(text)
         await look_out()
         await call.message.edit_text('КПП!', reply_markup=keyboard)
 

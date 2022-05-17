@@ -12,8 +12,8 @@ async def look_in():
         await get_text(text)
         return
     else:
-        text = 'Здравствуйте ' + name
-        await get_text(text)
+        text_tts = 'Здравствуйте ' + name
+        await get_text_tts(text_tts)
         write_db(name)
         cv2.destroyAllWindows()
 
@@ -41,7 +41,7 @@ def write_db(name):
     cur.execute(sqlite_insert_with_name, name_tuple)
     conn.commit()
     conn.close()
-    print(f"Сотрудник -> {name} успешно добавлен")
+    print(f"{FR.RED}INFO: {FR.GREEN}Сотрудник -> {name} успешно добавлен")
 
 
 def table_db():
