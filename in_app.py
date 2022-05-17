@@ -3,9 +3,6 @@ from main import *
 
 async def look_in():
     name = await face_rec()
-    if name is None:
-        text = "Вас плохо видно!!! Попробуйте снова!"
-        await get_text(text)
     # Голосовое приветствие
     if name == 'No name':
         text = "Лицо не распознано, пользователь неизвестен!!!"
@@ -53,3 +50,7 @@ def table_db():
     for i in cur.fetchall():
         print(i)
     conn.close()
+
+
+if __name__ == '__main__':
+    asyncio.run(look_in())

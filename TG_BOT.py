@@ -30,6 +30,18 @@ async def cmd_weather(message: types.Message):
         await message.answer('Приветствую, выбери что нужно', reply_markup=keyboard)
 
 
+@dp.message_handler(state='*', commands='cancel')
+async def cancel_handler(message: types.Message, state: FSMContext):
+    current_state = await state.get_state()
+    if current_state is None:
+        return
+
+    logging.info('Cancelling state %r', current_state)
+    await state.finish()
+    await message.reply_sticker('CAACAgIAAxkBAAEDvMth7WDCakICzSjsnM2FJalBDq2_DAACVgADQbVWDNWTZQVPrTRWIwQ',
+                                reply_markup=types.ReplyKeyboardRemove())
+
+
 @dp.message_handler(state=Form.start)
 async def bot_start(message: types.Message):
     if message.text == 'КПП':
@@ -46,8 +58,6 @@ async def bot_start(message: types.Message):
     async def send_bounce_value(call: types.CallbackQuery):
         await call.answer(text='Вход 🔓')
         await call.message.edit_reply_markup()
-        # text = 'Внимание!!'
-        # await get_text(text)
         await look_in()
         await call.message.edit_text('КПП!', reply_markup=keyboard)
 
@@ -55,11 +65,11 @@ async def bot_start(message: types.Message):
     async def send_bounce_value(call: types.CallbackQuery):
         await call.answer(text='Выход 🔒')
         await call.message.edit_reply_markup()
-        # text = 'Внимание!!'
-        # await get_text(text)
         await look_out()
         await call.message.edit_text('КПП!', reply_markup=keyboard)
 
+
 if __name__ == '__main__':
     from handlers import dp
+
     executor.start_polling(dp, skip_updates=True)
