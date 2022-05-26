@@ -55,19 +55,19 @@ class FR(object):
                 IP_WEBCAM = f.readline()
 
 
-async def output(sleep, text):  # Создаём отдельный поток для цикла while
-    await asyncio.sleep(sleep)
-    print(text)
+# async def output(sleep, text):  # Создаём отдельный поток для цикла while
+#     await asyncio.sleep(sleep)
+#     print(text)
 
 
-async def face_rec():
+def face_rec():
     count_for_foto = 0
     # TODO for i in range(10):
     #     cam = cv2.VideoCapture(i)
     #     if cam:
     #         break
     while True:
-        await output(00000.1, f"{FR.RED}INFO: Поиск Лица")  # Притормаживаем наш шустрый цикл. (:
+        # await output(00000.1, f"{FR.RED}INFO: Поиск Лица")  # Притормаживаем наш шустрый цикл. (:
         cam = cv2.VideoCapture(f'http://{FR.IP_WEBCAM}:8080/video')
         ret, img = cam.read()
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -120,7 +120,7 @@ async def face_rec():
             continue
 
 
-async def get_text(text):
+def get_text(text):
     language = 'ru'
     model_id = 'ru_v3'
     sample_rate = 48000
@@ -145,7 +145,7 @@ async def get_text(text):
     return text
 
 
-async def get_text_tts(text_tts):
+def get_text_tts(text_tts):
     tts = pytt.init()
     rate = tts.getProperty('rate')
     volume = tts.getProperty('volume')

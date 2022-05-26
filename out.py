@@ -1,18 +1,18 @@
 from main import *
 
 
-async def look_out():
-    name = await face_rec()
+def look_out():
+    name = face_rec()
     #   Голосовое приветствие
     if name == 'No name':
         text = "Лицо не распознано, пользователь неизвестен!!!"
-        await get_text(text)
+        get_text(text)
         return
     else:
-        text_tts = f'Всего хорошего {name}'
-        await get_text_tts(text_tts)
+        # text_tts = f'Всего хорошего {name}'
+        # get_text_tts(text_tts)
         write_db(name)
-        cv2.destroyAllWindows()
+        return name
 
 
 def write_db(name):
@@ -53,4 +53,4 @@ def table_db():
 
 
 if __name__ == '__main__':
-    asyncio.run(look_out())
+    look_out()

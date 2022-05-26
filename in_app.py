@@ -1,18 +1,18 @@
 from main import *
 
 
-async def look_in():
-    name = await face_rec()
+def look_in():
+    name = face_rec()
     # Голосовое приветствие
     if name == 'No name':
         text = "Лицо не распознано, пользователь неизвестен!!!"
-        await get_text(text)
+        get_text(text)
         return
     else:
-        text_tts = 'Здравствуйте ' + name
-        await get_text_tts(text_tts)
+        # text_tts = 'Здравствуйте ' + name
+        # get_text_tts(text_tts)
         write_db(name)
-        cv2.destroyAllWindows()
+        return name
 
 
 def write_db(name):
@@ -53,4 +53,4 @@ def table_db():
 
 
 if __name__ == '__main__':
-    asyncio.run(look_in())
+    look_in()
